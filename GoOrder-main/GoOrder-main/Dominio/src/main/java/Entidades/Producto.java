@@ -2,30 +2,40 @@
 package Entidades;
 
 import Enumeradores.Disponibilidad;
+import org.bson.BsonType;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
 /**
  *
  * @author 
  */
 public class Producto {
-    
-    private Long id;
+    @BsonId
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    private String id;
+    private ImagenSerializada imagen;
     private String nombre;
     private String descripcion;
     private Double precio;
     private Disponibilidad disponibilidad;
-    private String imagen;
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    private String idcategoria;
+    private int stock;
+    
 
     public Producto() {
     }
 
-    public Producto(Long id, String nombre, String descripcion, Double precio, Disponibilidad disponibilidad, String imagen) {
+    public Producto(String id, ImagenSerializada imagen, String nombre, String descripcion, Double precio, Disponibilidad disponibilidad, String idcategoria, int stock) {
         this.id = id;
+        this.imagen = imagen;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.disponibilidad = disponibilidad;
-        this.imagen = imagen;
+        this.idcategoria = idcategoria;
+        this.stock = stock;
     }
 
     public Producto(String nombre, String descripcion, Double precio) {
@@ -43,12 +53,20 @@ public class Producto {
         this.nombre = nombre;
     }        
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public ImagenSerializada getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(ImagenSerializada imagen) {
+        this.imagen = imagen;
     }
 
     public String getNombre() {
@@ -83,13 +101,22 @@ public class Producto {
         this.disponibilidad = disponibilidad;
     }
 
-    public String getImagen() {
-        return imagen;
+    public String getIdcategoria() {
+        return idcategoria;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public void setIdcategoria(String idcategoria) {
+        this.idcategoria = idcategoria;
     }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
 
     @Override
     public String toString() {

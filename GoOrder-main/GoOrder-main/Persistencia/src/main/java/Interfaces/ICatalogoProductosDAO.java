@@ -1,7 +1,7 @@
 
 package Interfaces;
 
-import Entitys.Producto;
+import Entidades.Producto;
 import goorderpersistencia.PersistenciaException;
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author
  */
-public interface IProductoDAO {
+public interface ICatalogoProductosDAO {
     
     public abstract List<Producto> buscarProducto(String nombreProducto) throws PersistenciaException;
     

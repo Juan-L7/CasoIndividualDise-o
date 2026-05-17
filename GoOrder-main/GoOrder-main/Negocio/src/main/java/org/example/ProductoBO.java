@@ -1,13 +1,13 @@
 
 package org.example;
 
-import Entitys.Producto;
+import Entidades.Producto;
 import Interfaces.IProductoBO;
-import Interfaces.IProductoDAO;
 import Mappers.ProductoMapper;
 import goorderpersistencia.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
+import Interfaces.ICatalogoProductosDAO;
 
 /**
  *
@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class ProductoBO implements IProductoBO {
 
-    private IProductoDAO productoDAO;
+    private ICatalogoProductosDAO productoDAO;
 
-    public ProductoBO(IProductoDAO productoDAO) {
+    public ProductoBO(ICatalogoProductosDAO productoDAO) {
         this.productoDAO = productoDAO;
     }
 
@@ -41,10 +41,10 @@ public class ProductoBO implements IProductoBO {
     @Override
     public List<GoOrderDTO.ProductoDTO> listarProductos() throws NegocioException {
         try {
-            List<Entitys.Producto> listaEntidades = productoDAO.listarProductos();
+            List<Producto> listaEntidades = productoDAO.listarProductos();
 
             List<GoOrderDTO.ProductoDTO> listaNegocio = new ArrayList<>();
-            for (Entitys.Producto p : listaEntidades) {
+            for (Producto p : listaEntidades) {
                 listaNegocio.add(ProductoMapper.toNegocio(p));
             }
             return listaNegocio;

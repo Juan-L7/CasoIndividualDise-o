@@ -5,36 +5,41 @@
 package Entidades;
 
 import GoOrderDTO.ProductoDTO;
+import org.bson.BsonType;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
 /**
  *
  * @author juanl
  */
 public class ProductoSeleccionado {
-    
-    private Integer id;
+    @BsonId
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    private String id;
     private Integer cantidad;
     private Double importe;
     private Double precioActual;
-    private Producto producto;
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    private String idProducto;
 
     public ProductoSeleccionado() {
     }
 
     
-    public ProductoSeleccionado(Integer id, Integer cantidad, Double importe, Double precioActual, Producto producto) {
+    public ProductoSeleccionado(String id, Integer cantidad, Double importe, Double precioActual, String idProducto) {
         this.id = id;
         this.cantidad = cantidad;
         this.importe = importe;
         this.precioActual = precioActual;
-        this.producto = producto;
+        this.idProducto = idProducto;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,12 +67,12 @@ public class ProductoSeleccionado {
         this.precioActual = precioActual;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public String getidProducto() {
+        return idProducto;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setidProducto(String idProducto) {
+        this.idProducto = idProducto;
     }
     
     
