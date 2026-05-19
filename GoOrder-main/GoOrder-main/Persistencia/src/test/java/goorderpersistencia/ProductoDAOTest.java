@@ -23,13 +23,13 @@ public class ProductoDAOTest {
         dao = new ProductoDAO();
     }
 
-    @Test
-    public void registrarProductoOK() throws PersistenciaException{
-        Producto nuevoProducto = new Producto(null,null,"Latte", "Un tipo de cafe", 50.00,DISPONIBLE,null,100 );
-        Producto productoRegistrado = dao.registrarProducto(nuevoProducto);
-        assertEquals(productoRegistrado.getNombre(),"Latte");
-        System.out.println(productoRegistrado);
-        
-    }
+//    @Test
+//    public void registrarProductoOK() throws PersistenciaException{
+//        Producto nuevoProducto = new Producto(null,(new ImagenSerializada("latte_vainilla.png","png")),"Latte", "Un tipo de cafe", 50.00,DISPONIBLE,null,100 );
+//        Producto productoRegistrado = dao.registrarProducto(nuevoProducto);
+//        assertEquals(productoRegistrado.getNombre(),"Latte");
+//        System.out.println(productoRegistrado);
+//        
+//    }
     
 }

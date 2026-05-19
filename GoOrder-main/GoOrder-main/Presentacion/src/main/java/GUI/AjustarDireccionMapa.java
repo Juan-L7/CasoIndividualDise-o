@@ -212,7 +212,7 @@ public class AjustarDireccionMapa extends JFrame {
             String urlString = "https://nominatim.openstreetmap.org/reverse?format=json&lat="
                     + posicion.getLatitude() + "&lon=" + posicion.getLongitude();
 
-            URL url = new URL(urlString);
+            URL url = java.net.URI.create(urlString).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "GoOrderApp/1.0");

@@ -43,7 +43,7 @@ public class Infraestructura {
         referencias.put("OXXO999", 3000.00);
         referencias.put("PAY777", 50.00);
 
-        try (ServerSocket serverSocket = new ServerSocket(9001)) {
+        try (ServerSocket serverSocket = new ServerSocket(9002)) {
             System.out.println("=== BANCO CON SALDOS INICIADO ===");
             System.out.println("Esperando cobros en el puerto 9001...");
 

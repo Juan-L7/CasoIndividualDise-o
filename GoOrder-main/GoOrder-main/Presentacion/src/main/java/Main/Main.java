@@ -27,7 +27,7 @@ import Interfaces.ICatalogoProductosDAO;
 public class Main {
     public static void main(String[] args) {
         ICatalogoProductosDAO productoDAO = new ProductoDAO();
-        IProductoBO productoBO = new ProductoBO(productoDAO);
+        IProductoBO productoBO = new ProductoBO();
         IDescuentosDAO descuentosDAO = new DescuentosDAO();
         IDescuentosBO descuentosBO = new DescuentosBO(descuentosDAO);
         ICarritoDAO carritoDAO = new CarritoDAO();

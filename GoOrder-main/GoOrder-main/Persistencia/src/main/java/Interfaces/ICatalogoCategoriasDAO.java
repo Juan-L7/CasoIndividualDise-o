@@ -4,17 +4,18 @@
  */
 package Interfaces;
 
-import DTOs.ProductoDTO;
-import Entidades.Producto;
+import Entidades.Categoria;
 import goorderpersistencia.PersistenciaException;
+import java.util.List;
 
 /**
  *
  * @author juanl
  */
-public interface IProductosDAO {
+public interface ICatalogoCategoriasDAO {
     
-    public abstract Producto registrarProducto(Producto nuevoProducto)throws PersistenciaException;
+    public abstract List<Categoria> listaCategorias()throws PersistenciaException;
     
-    public abstract Producto actualizarProducto(Producto productoActualizado) throws PersistenciaException;
+    public abstract Categoria buscarCategoriaPorId(String idCategoria) throws PersistenciaException;
+    
 }

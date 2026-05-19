@@ -2,12 +2,18 @@
 package org.example;
 
 import Entidades.Producto;
+import Fachada.FachadaPersistencia;
+import Fachada.IFachadaPersistencia;
+import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.ProductoActualizadoDTO;
+import GoOrderDTO.ProductoDTO;
 import Interfaces.IProductoBO;
 import Mappers.ProductoMapper;
 import goorderpersistencia.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
 import Interfaces.ICatalogoProductosDAO;
+import Mappers.ProductoAdapter;
 
 /**
  *
@@ -15,16 +21,16 @@ import Interfaces.ICatalogoProductosDAO;
  */
 public class ProductoBO implements IProductoBO {
 
-    private ICatalogoProductosDAO productoDAO;
+    private IFachadaPersistencia fachada;
 
-    public ProductoBO(ICatalogoProductosDAO productoDAO) {
-        this.productoDAO = productoDAO;
+    public ProductoBO() {
+        this.fachada = new FachadaPersistencia();
     }
 
     @Override
     public List<GoOrderDTO.ProductoDTO> buscarProducto(String nombreProducto) throws NegocioException {
         try {
-            List<Producto> listaEntity = productoDAO.buscarProducto(nombreProducto);
+            List<Producto> listaEntity = fachada.buscarProducto(nombreProducto);
 
             List<GoOrderDTO.ProductoDTO> listaDTo = new ArrayList<>();
 
@@ -41,7 +47,7 @@ public class ProductoBO implements IProductoBO {
     @Override
     public List<GoOrderDTO.ProductoDTO> listarProductos() throws NegocioException {
         try {
-            List<Producto> listaEntidades = productoDAO.listarProductos();
+            List<Producto> listaEntidades = fachada.listarProductos();
 
             List<GoOrderDTO.ProductoDTO> listaNegocio = new ArrayList<>();
             for (Producto p : listaEntidades) {
@@ -52,4 +58,37 @@ public class ProductoBO implements IProductoBO {
             throw new NegocioException("No fue posible consultar productos.");
         }
     }
+
+    @Override
+    public ProductoDTO registrarProducto(NuevoProductoDTO nuevoProducto) throws NegocioException {
+        try {
+            String idCategoria = nuevoProducto.getIdcategoria();
+        
+            if (idCategoria == null || idCategoria.trim().isEmpty()) {
+                throw new NegocioException("Error: Debes seleccionar una categoría para registrar el producto.");
+            }
+
+            Entidades.Categoria categoriaExiste = fachada.buscarCategoriaPorId(idCategoria);
+
+            if (categoriaExiste == null) {
+                throw new NegocioException("Error: La categoría seleccionada no existe en el sistema.");
+            }
+            
+            Entidades.Producto entidadAGuardar = ProductoAdapter.convertirAEntidad(nuevoProducto);
+            Entidades.Producto entidadRegistrada;
+            entidadRegistrada = fachada.registrarProducto(entidadAGuardar);
+
+            GoOrderDTO.ProductoDTO productoRegistradoDTO = ProductoMapper.toNegocio(entidadRegistrada);
+            return productoRegistradoDTO;
+
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al registrar el producto en el sistema: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
