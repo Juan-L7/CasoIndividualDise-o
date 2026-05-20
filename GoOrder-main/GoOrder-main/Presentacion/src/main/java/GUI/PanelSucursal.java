@@ -2,6 +2,7 @@ package GUI;
 
 import Control.Control;
 import GoOrderDTO.SucursalDTO;
+import Pattern.IngresarImagen;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -28,8 +29,17 @@ public class PanelSucursal extends JPanel {
 
         ImageIcon iconoOriginal = control.obtenerImagen(s.getNombreImagen());
         Image imgEscalada = iconoOriginal.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-        JLabel lblIcono = new JLabel(new ImageIcon(imgEscalada));
+        JLabel lblIcono = new JLabel();
         lblIcono.setPreferredSize(new Dimension(100, 100));
+        lblIcono.setForeground(Color.WHITE); 
+        lblIcono.setHorizontalAlignment(SwingConstants.CENTER);
+
+        if (s.getNombreImagen() != null && !s.getNombreImagen().isEmpty()) {
+            IngresarImagen.ingresarImagen(lblIcono, s.getNombreImagen(), 80, 80);
+        } else {
+            lblIcono.setText("SIN IMAGEN");
+        }
+
         add(lblIcono, BorderLayout.WEST);
 
         JPanel infoPanel = new JPanel();

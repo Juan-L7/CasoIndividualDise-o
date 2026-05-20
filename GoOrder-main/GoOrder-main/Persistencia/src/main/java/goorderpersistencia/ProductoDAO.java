@@ -110,46 +110,42 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
 
     @Override
     public Producto actualizarProducto(Producto productoActualizado) throws PersistenciaException {
-            try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
+        try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
             MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
             MongoCollection<Producto> coleccion = this.obtenerColecciones(baseDatos);
 
             ObjectId idProducto = new ObjectId(productoActualizado.getId());
             Document filtro = new Document("_id", idProducto);
 
-            Document docImagen = null;
-            if (productoActualizado.getImagen() != null) {
-                docImagen = new Document()
-                    .append("datosImagen", productoActualizado.getImagen().getImagen())
-                    .append("formato", productoActualizado.getImagen().getFormato());
-            }
-
-            String disponibilidadTexto = null;
-            if (productoActualizado.getDisponibilidad() != null) {
-                disponibilidadTexto = productoActualizado.getDisponibilidad().name();
-            }
-
-            Document datosActualizados = new Document("$set", new Document()
-                .append("imagen", docImagen)
+            Document setUpdates = new Document()
                 .append("nombre", productoActualizado.getNombre())
                 .append("descripcion", productoActualizado.getDescripcion())
                 .append("precio", productoActualizado.getPrecio())
-                .append("disponibilidad", disponibilidadTexto) 
                 .append("idCategoria", productoActualizado.getIdcategoria()) 
-                .append("stock", productoActualizado.getStock())
-            );
+                .append("stock", productoActualizado.getStock());
 
+            if (productoActualizado.getDisponibilidad() != null) {
+                setUpdates.append("disponibilidad", productoActualizado.getDisponibilidad().name());
+            }
+
+            if (productoActualizado.getImagen() != null && productoActualizado.getImagen().getImagen() != null) {
+                Document docImagen = new Document()
+                    .append("datosImagen", productoActualizado.getImagen().getImagen())
+                    .append("formato", productoActualizado.getImagen().getFormato());
+                
+                setUpdates.append("imagen", docImagen);
+            }
+
+            Document datosActualizados = new Document("$set", setUpdates);
             com.mongodb.client.result.UpdateResult resultado = coleccion.updateOne(filtro, datosActualizados);
 
             if (resultado.getMatchedCount() == 0) {
                 throw new PersistenciaException("No se encontró el producto con ID: " + productoActualizado.getId() + " en la BD.");
             }
-            System.out.println(productoActualizado.getNombre());
-            System.out.println(productoActualizado.getPrecio());
             return productoActualizado; 
             
         } catch (Exception e) {
-            throw new PersistenciaException("Error al actualizar el producto en la base de datos", e);
+            throw new PersistenciaException("Error al actualizar el producto en la base de datos: " + e.getMessage(), e);
         }
     }
     

@@ -145,8 +145,17 @@ public class Carrito extends JFrame {
         lblImagen.setOpaque(true);
         lblImagen.setBackground(new Color(50, 50, 50));
         lblImagen.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        String nombreImagen = producto.getProducto().getImagen();
-        IngresarImagen.ingresarImagen(lblImagen, nombreImagen, 100, 70);
+        lblImagen.setHorizontalAlignment(SwingConstants.CENTER); 
+
+        String textoBase64 = producto.getProducto().getImagen();
+        
+        if (textoBase64 != null && !textoBase64.trim().isEmpty()) {
+            IngresarImagen.ingresarImagenBase64(lblImagen, textoBase64, 70, 70);
+        } else {
+            lblImagen.setIcon(null);
+            lblImagen.setText("NO IMG");
+            lblImagen.setForeground(Color.WHITE);
+        }
 
         JPanel panelInfo = new JPanel();
         panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
