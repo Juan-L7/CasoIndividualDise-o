@@ -19,6 +19,8 @@ public interface IFachadaPersistencia {
     
     public abstract Producto actualizarProducto(Producto productoActualizado) throws PersistenciaException;
     
+    public List<Producto> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws PersistenciaException;
+    
     public abstract List<Producto> buscarProducto(String nombre) throws PersistenciaException;
     
     public abstract List<Producto> listarProductos() throws PersistenciaException;

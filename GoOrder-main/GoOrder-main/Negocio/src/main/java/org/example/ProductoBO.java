@@ -7,6 +7,7 @@ import Fachada.IFachadaPersistencia;
 import GoOrderDTO.NuevoProductoDTO;
 import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
+import GoOrderDTO.ProductoDTOCom;
 import Interfaces.IProductoBO;
 import Mappers.ProductoMapper;
 import goorderpersistencia.PersistenciaException;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Interfaces.ICatalogoProductosDAO;
 import Mappers.ProductoAdapter;
+import Mappers.ProductoAdatadorAProductoDTOCom;
 
 /**
  *
@@ -88,7 +90,31 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            Entidades.Producto entidadAActualizar= ProductoAdapter.convertirActualizadoAEntidad(productoActualizado);
+        try {
+            Producto producto = fachada.actualizarProducto(entidadAActualizar);
+            GoOrderDTO.ProductoDTO productoRegistradoDTO = ProductoMapper.toNegocio(producto);
+            return productoRegistradoDTO;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al actualizar el producto en el sistema: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<ProductoDTOCom> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws NegocioException {
+          try {
+            List<Producto> listaEntity = fachada.buscarProductosDinamico(nombre, idCategoria, precioMin, precioMax);
+
+            List<GoOrderDTO.ProductoDTOCom> listaDTo = new ArrayList<>();
+
+            for (Producto p : listaEntity) {
+                listaDTo.add(ProductoAdatadorAProductoDTOCom.toNegocio(p));
+            }
+
+            return listaDTo;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("No fue posible realizar busqueda.");
+        }  
     }
 
 }

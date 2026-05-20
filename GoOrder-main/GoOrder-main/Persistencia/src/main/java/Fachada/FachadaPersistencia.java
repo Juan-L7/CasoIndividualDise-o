@@ -62,5 +62,11 @@ public class FachadaPersistencia implements IFachadaPersistencia{
         IProductosDAO productoDAO = fabrica.crearProductosDAO();
         return productoDAO.actualizarProducto(productoActualizado);    
     }
+
+    @Override
+    public List<Producto> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws PersistenciaException {
+        IProductosDAO productoDAO = fabrica.crearProductosDAO();
+        return productoDAO.buscarProductosDinamico(nombre, idCategoria, precioMin, precioMax);
+    }
     
 }

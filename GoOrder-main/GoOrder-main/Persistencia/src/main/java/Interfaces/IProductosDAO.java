@@ -7,6 +7,7 @@ package Interfaces;
 import DTOs.ProductoDTO;
 import Entidades.Producto;
 import goorderpersistencia.PersistenciaException;
+import java.util.List;
 
 /**
  *
@@ -17,4 +18,6 @@ public interface IProductosDAO {
     public abstract Producto registrarProducto(Producto nuevoProducto)throws PersistenciaException;
     
     public abstract Producto actualizarProducto(Producto productoActualizado) throws PersistenciaException;
+    
+    public List<Producto> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws PersistenciaException;
 }

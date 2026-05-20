@@ -8,8 +8,11 @@ import static Enums.Disponibilidad.DISPONIBLE;
 import GoOrderDTO.CategoriaDTO;
 import GoOrderDTO.ImagenDTO;
 import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
+import PantallasCUIProductosPaq.BuscarProductoDialog;
+import PantallasCUIProductosPaq.PantallaMenu;
 import PantallasCUIProductosPaq.RegistroProducto;
 import PantallasCUIProductosPaq.inicioAdmin;
 import java.awt.Color;
@@ -41,9 +44,18 @@ public class ControlCUIProductosPaquetes {
         return cui.RegistrarProducto(nuevoProducto);
     }
     
-    public List<CategoriaDTO> listarCategoria()throws NegocioException{
-        return cui.listarCategoria();
+    public List<CategoriaDTO> listarCategorias()throws NegocioException{
+        return cui.listarCategorias();
     }
+    
+    public List<ProductoDTOCom> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws NegocioException{
+        return cui.buscarProductosDinamico(nombre, idCategoria, precioMin, precioMax);
+    }
+    
+    public ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException{
+        return cui.actualizarProducto(productoActualizado);
+    }
+
       
     //Navegacion
     private JFrame ventanaActual = null;
@@ -62,6 +74,12 @@ public class ControlCUIProductosPaquetes {
     public void mostrarRegistroProducto(){
         mostrarPantallas(new RegistroProducto(this));
     }
+    
+    public void mostrarPantallaMenu(){
+        mostrarPantallas(new PantallaMenu(this));
+    }
+    
+    
     
     
     

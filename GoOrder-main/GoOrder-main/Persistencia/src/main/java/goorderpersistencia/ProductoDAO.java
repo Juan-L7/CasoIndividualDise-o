@@ -14,8 +14,11 @@ import Interfaces.IProductosDAO;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import java.util.LinkedList;
+import java.util.regex.Pattern;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 /**
@@ -76,13 +79,14 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
         
         }
     }
+    
 
     @Override
     public Producto registrarProducto(Producto nuevoProducto) throws PersistenciaException {
           try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
             MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
             MongoCollection<Producto> coleccion = this.obtenerColecciones(baseDatos);
-
+            
             coleccion.insertOne(nuevoProducto);
             
             return nuevoProducto; 
@@ -125,7 +129,6 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
                 disponibilidadTexto = productoActualizado.getDisponibilidad().name();
             }
 
-            // 3. Armamos el update completo
             Document datosActualizados = new Document("$set", new Document()
                 .append("imagen", docImagen)
                 .append("nombre", productoActualizado.getNombre())
@@ -136,12 +139,57 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
                 .append("stock", productoActualizado.getStock())
             );
 
-            coleccion.updateOne(filtro, datosActualizados);
+            com.mongodb.client.result.UpdateResult resultado = coleccion.updateOne(filtro, datosActualizados);
 
+            if (resultado.getMatchedCount() == 0) {
+                throw new PersistenciaException("No se encontró el producto con ID: " + productoActualizado.getId() + " en la BD.");
+            }
+            System.out.println(productoActualizado.getNombre());
+            System.out.println(productoActualizado.getPrecio());
             return productoActualizado; 
-
+            
         } catch (Exception e) {
             throw new PersistenciaException("Error al actualizar el producto en la base de datos", e);
+        }
+    }
+    
+    @Override
+    public List<Producto> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws PersistenciaException {
+        try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
+            MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
+            MongoCollection<Producto> coleccion = this.obtenerColecciones(baseDatos);
+
+            List<Bson> listaFiltros = new ArrayList<>();
+
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                listaFiltros.add(Filters.regex("nombre", Pattern.quote(nombre.trim()), "i")); 
+            }
+
+            if (idCategoria != null && !idCategoria.trim().isEmpty() && !idCategoria.equalsIgnoreCase("TODAS")) {
+                listaFiltros.add(Filters.eq("idcategoria", new ObjectId(idCategoria)));
+            }
+
+            if (precioMin != null) {
+                listaFiltros.add(Filters.gte("precio", precioMin));
+            }
+            if (precioMax != null) {
+                listaFiltros.add(Filters.lte("precio", precioMax));
+            }
+
+            Bson filtroFinal;
+            if (listaFiltros.isEmpty()) {
+                filtroFinal = new org.bson.Document(); 
+            } else {
+                filtroFinal = Filters.and(listaFiltros);
+            }
+
+            List<Producto> productosEncontrados = new ArrayList<>();
+            coleccion.find(filtroFinal).into(productosEncontrados);
+
+            return productosEncontrados;
+
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar productos con filtros combinados", e);
         }
     }
 

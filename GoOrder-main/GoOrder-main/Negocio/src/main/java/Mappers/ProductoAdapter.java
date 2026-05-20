@@ -8,6 +8,7 @@ import Entidades.ImagenSerializada;
 import Entidades.Producto;
 import GoOrderDTO.ImagenDTO;
 import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
 
@@ -63,6 +64,31 @@ public class ProductoAdapter {
                 entidad.getDisponibilidad() != null ? Enums.Disponibilidad.valueOf(entidad.getDisponibilidad().name()) : null,
                 entidad.getIdcategoria(),
                 entidad.getStock()
+        );
+    }
+    
+    public static Producto convertirActualizadoAEntidad(ProductoActualizadoDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        ImagenSerializada imagenEntidad = null;
+        if (dto.getImagen() != null) {
+            imagenEntidad = new ImagenSerializada(
+                    dto.getImagen().getImagen(),
+                    dto.getImagen().getFormato()
+            );
+        }
+
+        return new Producto(
+                dto.getId(), 
+                imagenEntidad,
+                dto.getNombre(),
+                dto.getDescripcion(),
+                dto.getPrecio(),
+                dto.getDisponibilidad() != null ? Enumeradores.Disponibilidad.valueOf(dto.getDisponibilidad().name()) : null,
+                dto.getIdcategoria(),
+                dto.getStock()
         );
     }
 }

@@ -10,6 +10,7 @@ import Enums.Disponibilidad;
 import GoOrderDTO.CategoriaDTO;
 import GoOrderDTO.ImagenDTO;
 import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
 import java.awt.Color;
@@ -65,7 +66,7 @@ public class RegistroProducto extends JFrame{
         this.control = control;
         this.productoExistente = productoAEditar; 
         inicializarComponentes();
-        cargarDatosProducto(); // Método nuevo para rellenar los campos
+        cargarDatosProducto(); 
     }
     
 
@@ -229,7 +230,6 @@ public class RegistroProducto extends JFrame{
             }
 
             Disponibilidad disp = cmbEstado.getSelectedIndex() == 0 ? Disponibilidad.DISPONIBLE : Disponibilidad.NO_DISPONIBLE;
-
             ItemCategoria categoriaSeleccionada = (ItemCategoria) cmbCategoria.getSelectedItem();
 
             if (categoriaSeleccionada == null) {
@@ -237,6 +237,7 @@ public class RegistroProducto extends JFrame{
                 return;
             }
             String idCategoriaReal = categoriaSeleccionada.getId(); 
+            
             NuevoProductoDTO nuevoProd = new NuevoProductoDTO(
                     imagenDTO,
                     txtNombre.getText().trim(),
@@ -247,18 +248,39 @@ public class RegistroProducto extends JFrame{
                     Integer.parseInt(txtStock.getText().trim())
             );
 
-            ProductoDTO resultado = control.registrarProducto(nuevoProd); 
-
-            if (resultado != null) {
-                JOptionPane.showMessageDialog(this, "¡Producto registrado con éxito!\nID: " + resultado.getNombre(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                limpiarCampos();
+            if (productoExistente == null) {
+                ProductoDTO resultado = control.registrarProducto(nuevoProd); 
+                if (resultado != null) {
+                    JOptionPane.showMessageDialog(this, "¡Producto registrado con éxito!\nNombre: " + resultado.getNombre(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    limpiarCampos();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error al registrar.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Ocurrió un error al registrar (revisa la consola).", "Error", JOptionPane.ERROR_MESSAGE);
+                ProductoActualizadoDTO productoActualizado = new ProductoActualizadoDTO(
+                        productoExistente.getId(), 
+                        imagenDTO,                 
+                        txtNombre.getText().trim(),
+                        txtDescripcion.getText().trim(),
+                        Double.parseDouble(txtPrecio.getText().trim()),
+                        disp,                      
+                        idCategoriaReal,           
+                        Integer.parseInt(txtStock.getText().trim())
+                );
+                
+                ProductoDTO resultado = control.actualizarProducto(productoActualizado); 
+                
+                if (resultado != null) {
+                    JOptionPane.showMessageDialog(this, "¡Producto actualizado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    dispose(); 
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error al actualizar.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "El precio y el stock deben ser números válidos.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error del Sistema", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -293,7 +315,7 @@ public class RegistroProducto extends JFrame{
 }
     private void llenarComboCategorias() {
         try {
-            List<CategoriaDTO> listaCategorias = control.listarCategoria(); 
+            List<CategoriaDTO> listaCategorias = control.listarCategorias(); 
 
             for (CategoriaDTO cat : listaCategorias) {
                 cmbCategoria.addItem(new ItemCategoria(cat.getId(), cat.getNombre()));
@@ -329,7 +351,6 @@ public class RegistroProducto extends JFrame{
             return id;
         }
 
-        // ¡Este método es la magia! Es lo que el JComboBox va a mostrar en pantalla
         @Override
         public String toString() {
             return nombre;

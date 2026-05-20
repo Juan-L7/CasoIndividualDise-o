@@ -46,8 +46,8 @@ public class CatalogoCategoriasDAO implements ICatalogoCategoriasDAO{
     }
 
     public MongoCollection obtenerColecciones(MongoDatabase baseDatos) {
-           MongoCollection<Producto> coleccionProductos = baseDatos.getCollection(NOMBRE_COLECCION,Producto.class);
-           return coleccionProductos;
+           MongoCollection<Categoria> coleccionCategorias = baseDatos.getCollection(NOMBRE_COLECCION,Categoria.class);
+           return coleccionCategorias;
 
     }
 
@@ -59,7 +59,7 @@ public class CatalogoCategoriasDAO implements ICatalogoCategoriasDAO{
 
         try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
             MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
-            MongoCollection<Entidades.Categoria> coleccion = baseDatos.getCollection("categorias", Categoria.class);
+            MongoCollection<Entidades.Categoria> coleccion = baseDatos.getCollection(NOMBRE_COLECCION, Categoria.class);
 
             ObjectId idMongo = new ObjectId(idCategoria);
 
