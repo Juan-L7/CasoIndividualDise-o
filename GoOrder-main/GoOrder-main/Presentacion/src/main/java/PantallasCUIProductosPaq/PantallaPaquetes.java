@@ -6,6 +6,7 @@ import GoOrderDTO.ItemPaqueteDTO;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -59,8 +60,20 @@ public class PantallaPaquetes extends JFrame {
         getContentPane().setBackground(COLOR_FONDO_VERDE);
         setLayout(null); 
         
+        JLabel lblAtras = new JLabel("←");
+        lblAtras.setForeground(Color.WHITE);
+        lblAtras.setFont(new Font("Arial", Font.PLAIN, 30));
+        lblAtras.setBounds(20, 20, 50, 30);
+        lblAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblAtras.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dispose(); 
+                control.mostrarPantallaMenu();
+            }
+        });
         MenuLateral panelMenu = new MenuLateral(this, control);
         panelMenu.setBounds(0, 0, 110, 650); 
+        panelMenu.add(lblAtras);
         add(panelMenu); 
 
         Font fuenteTitulos = new Font("Arial", Font.BOLD, 36); 

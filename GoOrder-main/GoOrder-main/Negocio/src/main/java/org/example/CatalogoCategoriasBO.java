@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author juanl
  */
-public class CatalogoCategoriasBO implements ICatalogoCategoriasBO{
+public class CatalogoCategoriasBO implements ICatalogoCategoriasBO {
     
     private IFachadaPersistencia fachada;
     
@@ -38,20 +38,29 @@ public class CatalogoCategoriasBO implements ICatalogoCategoriasBO{
             }
             return listaNegocio;
         } catch (PersistenciaException ex) {
-            throw new NegocioException("No fue posible consultar las categorias.");
+            throw new NegocioException("No fue posible consultar las categorías.");
         }
     }
 
     @Override
     public CategoriaDTO buscarCategoriaPorId(String idCategoria) throws NegocioException {
+        
+        if (idCategoria == null || idCategoria.trim().isEmpty()) {
+            throw new NegocioException("Error: Debes proporcionar un ID válido para buscar la categoría.");
+        }
+        
         try {
             Categoria categoria = fachada.buscarCategoriaPorId(idCategoria);
+            
+            if (categoria == null) {
+                throw new NegocioException("Error: La categoría buscada no existe en el sistema.");
+            }
+            
             CategoriaDTO catDTO = CategoriasMapper.toNegocio(categoria);
             return catDTO;
         } catch (PersistenciaException ex) {
-            throw new NegocioException("No fue posible consultar la categoria.");
+            throw new NegocioException("No fue posible consultar la categoría: " + ex.getMessage());
         }
     }
-    
     
 }

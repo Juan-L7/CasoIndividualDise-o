@@ -14,7 +14,6 @@ import java.util.List;
 public class CarritoDTO {
     
     private List<ProductoSeleccionadoDTO> productos = new ArrayList<>();
-    //private Long idCliente;
     private Double subTotal = 0.0; 
     private Double total = 0.0;
     private Double descuento = 0.0;

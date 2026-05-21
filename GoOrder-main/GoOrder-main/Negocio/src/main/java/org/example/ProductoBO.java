@@ -31,9 +31,13 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public List<GoOrderDTO.ProductoDTO> buscarProducto(String nombreProducto) throws NegocioException {
+        
+        if (nombreProducto == null) {
+            throw new NegocioException("El texto de búsqueda no puede ser nulo.");
+        }
+        
         try {
             List<Producto> listaEntity = fachada.buscarProducto(nombreProducto);
-
             List<GoOrderDTO.ProductoDTO> listaDTo = new ArrayList<>();
 
             for (Producto p : listaEntity) {
@@ -42,7 +46,7 @@ public class ProductoBO implements IProductoBO {
 
             return listaDTo;
         } catch (PersistenciaException e) {
-            throw new NegocioException("No fue posible realizar busqueda.");
+            throw new NegocioException("No fue posible realizar la búsqueda.");
         }
     }
 
@@ -50,8 +54,8 @@ public class ProductoBO implements IProductoBO {
     public List<GoOrderDTO.ProductoDTO> listarProductos() throws NegocioException {
         try {
             List<Producto> listaEntidades = fachada.listarProductos();
-
             List<GoOrderDTO.ProductoDTO> listaNegocio = new ArrayList<>();
+            
             for (Producto p : listaEntidades) {
                 listaNegocio.add(ProductoMapper.toNegocio(p));
             }
@@ -63,6 +67,18 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public ProductoDTO registrarProducto(NuevoProductoDTO nuevoProducto) throws NegocioException {
+    
+        if (nuevoProducto == null) {
+            throw new NegocioException("Error: Los datos del producto a registrar están vacíos.");
+        }
+        
+        if (nuevoProducto.getNombre() == null || nuevoProducto.getNombre().trim().isEmpty()) {
+            throw new NegocioException("Error: El nombre del producto es obligatorio.");
+        }
+        if (nuevoProducto.getPrecio() == null || nuevoProducto.getPrecio() <= 0) {
+            throw new NegocioException("Error: El precio del producto debe ser mayor a cero.");
+        }
+        
         try {
             String idCategoria = nuevoProducto.getIdcategoria();
         
@@ -90,7 +106,19 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException {
-            Entidades.Producto entidadAActualizar= ProductoAdapter.convertirActualizadoAEntidad(productoActualizado);
+        
+        if (productoActualizado == null) {
+            throw new NegocioException("Error: No se enviaron datos para actualizar.");
+        }
+        if (productoActualizado.getId() == null || productoActualizado.getId().trim().isEmpty()) {
+            throw new NegocioException("Error: El ID del producto a actualizar es obligatorio.");
+        }
+        if (productoActualizado.getPrecio() != null && productoActualizado.getPrecio() < 0) {
+            throw new NegocioException("Error: El precio no puede ser un valor negativo.");
+        }
+        
+        Entidades.Producto entidadAActualizar = ProductoAdapter.convertirActualizadoAEntidad(productoActualizado);
+        
         try {
             Producto producto = fachada.actualizarProducto(entidadAActualizar);
             GoOrderDTO.ProductoDTO productoRegistradoDTO = ProductoMapper.toNegocio(producto);
@@ -102,9 +130,19 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public List<ProductoDTOCom> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws NegocioException {
-          try {
+ 
+        if (precioMin != null && precioMin < 0) {
+            throw new NegocioException("Error: El precio mínimo no puede ser negativo.");
+        }
+        if (precioMax != null && precioMax < 0) {
+            throw new NegocioException("Error: El precio máximo no puede ser negativo.");
+        }
+        if (precioMin != null && precioMax != null && precioMin > precioMax) {
+            throw new NegocioException("Error: El precio mínimo no puede ser mayor al precio máximo.");
+        }
+        
+        try {
             List<Producto> listaEntity = fachada.buscarProductosDinamico(nombre, idCategoria, precioMin, precioMax);
-
             List<GoOrderDTO.ProductoDTOCom> listaDTo = new ArrayList<>();
 
             for (Producto p : listaEntity) {
@@ -113,19 +151,23 @@ public class ProductoBO implements IProductoBO {
 
             return listaDTo;
         } catch (PersistenciaException e) {
-            throw new NegocioException("No fue posible realizar busqueda.");
+            throw new NegocioException("No fue posible realizar la búsqueda dinámica.");
         }  
     }
 
     @Override
     public ProductoDTO eliminarProducto(String id) throws NegocioException {
+        if (id == null || id.trim().isEmpty()) {
+            throw new NegocioException("Error: Debes proporcionar un ID válido para eliminar el producto.");
+        }
+        
         Producto producto;
         try {
             producto = fachada.eliminarProducto(id);
             GoOrderDTO.ProductoDTO productoEliminadoDTO = ProductoMapper.toNegocio(producto);
             return productoEliminadoDTO;
         } catch (PersistenciaException ex) {
-            throw new NegocioException("No fue posible eliminar el producto");
+            throw new NegocioException("No fue posible eliminar el producto.");
         }
             
     }

@@ -61,7 +61,7 @@ public class inicioAdmin extends JFrame{
         lblTitulo.setForeground(control.COLOR_NEON);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel lblSubtitulo = new JLabel("Tu comida, al instante.");
+        JLabel lblSubtitulo = new JLabel("Gestiona los productos");
         lblSubtitulo.setFont(new Font("Arial", Font.ITALIC, 16));
         lblSubtitulo.setForeground(Color.LIGHT_GRAY);
         lblSubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -10,6 +10,7 @@ import Observer.IProductoSeleccionadoObserver;
 import PantallasCUIProductosPaq.BuscarProductoDialog;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -30,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -91,9 +93,11 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         getContentPane().setBackground(COLOR_FONDO_VERDE);
         setLayout(null); 
         
+        
         MenuLateral panelMenu = new MenuLateral(this, control);
         panelMenu.setBounds(0, 0, 110, 650); 
         add(panelMenu); 
+        
 
         Font fuenteTitulos = new Font("Arial", Font.BOLD, 24);
         Font fuenteEtiquetas = new Font("Arial", Font.BOLD, 14);

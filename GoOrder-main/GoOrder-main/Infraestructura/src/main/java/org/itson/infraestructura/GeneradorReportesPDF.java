@@ -24,17 +24,11 @@ public class GeneradorReportesPDF {
 
         try {
 
-            // =========================
-            // DATOS DE LA TABLA
-            // =========================
             JRBeanCollectionDataSource dataSource =
                     new JRBeanCollectionDataSource(
                             datosReporte.getDetallesTabla()
                     );
 
-            // =========================
-            // CARGAR JRXML
-            // =========================
             InputStream reporte =
                     GeneradorReportesPDF.class
                             .getClassLoader()
@@ -54,15 +48,9 @@ public class GeneradorReportesPDF {
                 return;
             }
 
-            // =========================
-            // COMPILAR
-            // =========================
             JasperReport jasperReport =
                     JasperCompileManager.compileReport(reporte);
 
-            // =========================
-            // PARÁMETROS
-            // =========================
             Map<String, Object> parametros =
                     new HashMap<>();
 
@@ -76,7 +64,6 @@ public class GeneradorReportesPDF {
                     datosReporte.getRangoFechas()
             );
 
-            // ===== AQUÍ ESTABA TU ERROR =====
             parametros.put(
                     "totalPaquetesRegistrados",
                     String.valueOf(
@@ -96,9 +83,6 @@ public class GeneradorReportesPDF {
                     datosReporte.getPaqueteMasVendido()
             );
 
-            // =========================
-            // LLENAR REPORTE
-            // =========================
             JasperPrint jasperPrint =
                     JasperFillManager.fillReport(
                             jasperReport,
@@ -106,9 +90,6 @@ public class GeneradorReportesPDF {
                             dataSource
                     );
 
-            // =========================
-            // GUARDAR PDF
-            // =========================
             JFileChooser fileChooser =
                     new JFileChooser();
 
@@ -141,9 +122,6 @@ public class GeneradorReportesPDF {
                 ruta += ".pdf";
             }
 
-            // =========================
-            // EXPORTAR
-            // =========================
             JasperExportManager.exportReportToPdfFile(
                     jasperPrint,
                     ruta
