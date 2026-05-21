@@ -24,6 +24,8 @@ public interface IProductoBO {
     
     public abstract ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException;
     
+    public abstract ProductoDTO eliminarProducto(String id) throws NegocioException;
+    
     public List<ProductoDTOCom> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws NegocioException;
     
 }

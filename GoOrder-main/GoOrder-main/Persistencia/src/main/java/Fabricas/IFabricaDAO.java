@@ -6,6 +6,7 @@ package Fabricas;
 
 import Interfaces.ICatalogoCategoriasDAO;
 import Interfaces.ICatalogoProductosDAO;
+import Interfaces.IPaquetesDAO;
 import Interfaces.IProductosDAO;
 import goorderpersistencia.PersistenciaException;
 
@@ -20,4 +21,6 @@ public interface IFabricaDAO {
     public abstract ICatalogoProductosDAO crearCatalogoProductosDAO() throws PersistenciaException;
     
     public abstract ICatalogoCategoriasDAO crearCatalogoCategoriasDAO() throws PersistenciaException;
+    
+    public abstract IPaquetesDAO crearPaquetesDAO() throws PersistenciaException;
 }

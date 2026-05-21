@@ -5,11 +5,13 @@
 package Fachada;
 
 import Entidades.Categoria;
+import Entidades.Paquete;
 import Entidades.Producto;
 import Fabricas.FabricaDAOMongo;
 import Fabricas.IFabricaDAO;
 import Interfaces.ICatalogoCategoriasDAO;
 import Interfaces.ICatalogoProductosDAO;
+import Interfaces.IPaquetesDAO;
 import Interfaces.IProductosDAO;
 import goorderpersistencia.PersistenciaException;
 import java.util.List;
@@ -67,6 +69,18 @@ public class FachadaPersistencia implements IFachadaPersistencia{
     public List<Producto> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws PersistenciaException {
         IProductosDAO productoDAO = fabrica.crearProductosDAO();
         return productoDAO.buscarProductosDinamico(nombre, idCategoria, precioMin, precioMax);
+    }
+
+    @Override
+    public Producto eliminarProducto(String id) throws PersistenciaException {
+        IProductosDAO productoDAO = fabrica.crearProductosDAO();
+        return productoDAO.eliminarProducto(id);
+    }
+
+    @Override
+    public Paquete registrarPaquete(Paquete paquete) throws PersistenciaException {
+        IPaquetesDAO paquetesDAO = fabrica.crearPaquetesDAO();
+        return paquetesDAO.registrarPaquete(paquete);
     }
     
 }

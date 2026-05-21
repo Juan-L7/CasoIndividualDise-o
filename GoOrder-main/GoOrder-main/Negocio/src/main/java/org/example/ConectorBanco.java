@@ -18,7 +18,7 @@ public class ConectorBanco implements IServicioBanco{
 
     @Override
     public boolean procesarPago(String cuenta, double monto) {
-        try (Socket socket = new Socket("localhost", 9001);
+        try (Socket socket = new Socket("localhost", 9002);
                 DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
                 DataInputStream entrada = new DataInputStream(socket.getInputStream())) {
 

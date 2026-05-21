@@ -117,4 +117,17 @@ public class ProductoBO implements IProductoBO {
         }  
     }
 
+    @Override
+    public ProductoDTO eliminarProducto(String id) throws NegocioException {
+        Producto producto;
+        try {
+            producto = fachada.eliminarProducto(id);
+            GoOrderDTO.ProductoDTO productoEliminadoDTO = ProductoMapper.toNegocio(producto);
+            return productoEliminadoDTO;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("No fue posible eliminar el producto");
+        }
+            
+    }
+
 }

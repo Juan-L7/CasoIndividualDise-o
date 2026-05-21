@@ -5,15 +5,19 @@
 package org.itson.gestionproductospaquetescui;
 
 import GoOrderDTO.CategoriaDTO;
+import GoOrderDTO.NuevoPaqueteDTO;
 import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
 import Interfaces.ICatalogoCategoriasBO;
+import Interfaces.IPaquetesBO;
 import Interfaces.IProductoBO;
 import java.util.List;
 import org.example.CatalogoCategoriasBO;
 import org.example.NegocioException;
+import org.example.PaquetesBO;
 import org.example.ProductoBO;
 
 /**
@@ -24,10 +28,12 @@ public class GestionProductosPaquetesCUI implements IGestionProductosPaquetesCUI
 
     private IProductoBO productoBO;
     private ICatalogoCategoriasBO categoriasBO;
+    private IPaquetesBO paquetesBO;
 
     public GestionProductosPaquetesCUI() {
         this.productoBO = new ProductoBO();
         this.categoriasBO = new CatalogoCategoriasBO();
+        this.paquetesBO = new PaquetesBO();
     }
             
     
@@ -56,6 +62,16 @@ public class GestionProductosPaquetesCUI implements IGestionProductosPaquetesCUI
     @Override
     public ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException {
             return productoBO.actualizarProducto(productoActualizado);
+    }
+
+    @Override
+    public ProductoDTO eliminarProducto(String id) throws NegocioException {
+            return productoBO.eliminarProducto(id);
+    }
+
+    @Override
+    public PaqueteDTO registrarPaquete(NuevoPaqueteDTO nuevopaquete) throws NegocioException {
+            return paquetesBO.registrarPaquete(nuevopaquete);
     }
 }
  

@@ -31,22 +31,9 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
 //    private List<Producto> productos;
 
     public ProductoDAO() {
-//        productos = new ArrayList<>();
-//        productos.add(new Producto("1",(new ImagenSerializada("latte_vainilla.png","png")),"Latte", "Un tipo de cafe", 50.00,DISPONIBLE,"1",100 ));
-//        productos.add(new Producto("2",(new ImagenSerializada("panini_clasico.png","png")),"Paninni", "Queso y Jamon", 50.00,DISPONIBLE,"2",100 ));
-//        productos.add(new Producto("3",(new ImagenSerializada("galleta_chispas.png","png")),"Galleta de chispas", "Galleta con chispas de chocolate", 15.00,DISPONIBLE,"2",100 ));
-//
-//        productos.add(new Producto("4",(new ImagenSerializada("espresso.png","png")),"Espresso", "Cafe fuerte", 30.00,DISPONIBLE,"1",100 ));
-//        productos.add(new Producto("5",(new ImagenSerializada("capuccino.png","png")),"Capuccino", "Cafe espumado", 50.00,DISPONIBLE,"1",100 ));
-//        productos.add(new Producto("6",(new ImagenSerializada("mocha.png","png")),"Mocha", "Cafe chocolate", 55.00,DISPONIBLE,"1",100));
-//        productos.add(new Producto("7",(new ImagenSerializada("croissant.png","png")),"Croissant", "Pan mantequilla", 35.00,DISPONIBLE,"2",100));
-//
-//        productos.add(new Producto("8",(new ImagenSerializada("muffin.png","png")),"Muffin", "Pan dulce", 28.00,DISPONIBLE,"2",100 ));
-//        productos.add(new Producto("9",(new ImagenSerializada("brownie.png","png")),"Brownie","Pastel chocolate", 32.00,DISPONIBLE,"2",100 ));
-//        productos.add(new Producto("10",(new ImagenSerializada("sandwich.png","png")),"Sandwich", "Pan con jamon", 48.00,DISPONIBLE,"2",100 ));
-//        
-//        productos.add(new Producto("11",(new ImagenSerializada("bagel.png","png")),"Bagel", "Pan con queso", 40.00,DISPONIBLE,"2",100 ));      
+    
     }
+
 
     @Override
     public List<Producto> buscarProducto(String nombreProducto) throws PersistenciaException {
@@ -55,13 +42,8 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
             MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
             MongoCollection<Producto> coleccion = this.obtenerColecciones(baseDatos);    
         
-            List<Producto> productos = new LinkedList<>();
-            coleccion.find().into(productos);
-            for (Producto producto : productos) {
-                if(producto.getNombre().equals(nombreProducto)){
-                    resultado.add(producto);
-                }
-            }
+            Bson filtro = Filters.eq("nombre", nombreProducto);
+            coleccion.find(filtro).into(resultado);
         
         }
         return resultado;
@@ -130,7 +112,7 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
 
             if (productoActualizado.getImagen() != null && productoActualizado.getImagen().getImagen() != null) {
                 Document docImagen = new Document()
-                    .append("datosImagen", productoActualizado.getImagen().getImagen())
+                    .append("imagen", productoActualizado.getImagen().getImagen()) 
                     .append("formato", productoActualizado.getImagen().getFormato());
                 
                 setUpdates.append("imagen", docImagen);
@@ -189,4 +171,24 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
         }
     }
 
+    @Override
+    public Producto eliminarProducto(String id) throws PersistenciaException {
+        try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
+            MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
+            MongoCollection<Producto> coleccion = this.obtenerColecciones(baseDatos);
+
+            ObjectId idProducto = new ObjectId(id);
+            Bson filtro = Filters.eq("_id", idProducto);
+
+            Producto productoEliminado = coleccion.findOneAndDelete(filtro);
+
+            if (productoEliminado == null) {
+                throw new PersistenciaException("No se encontró el producto con ID: " + id + " para eliminar.");
+            }
+
+            return productoEliminado; 
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al intentar eliminar el producto en la base de datos", e);
+        }
+    }
 }

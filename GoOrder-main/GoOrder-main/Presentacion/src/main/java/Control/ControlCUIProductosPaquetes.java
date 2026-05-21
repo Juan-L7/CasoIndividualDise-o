@@ -7,12 +7,16 @@ package Control;
 import static Enums.Disponibilidad.DISPONIBLE;
 import GoOrderDTO.CategoriaDTO;
 import GoOrderDTO.ImagenDTO;
+import GoOrderDTO.NuevoPaqueteDTO;
 import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
 import PantallasCUIProductosPaq.BuscarProductoDialog;
+import PantallasCUIProductosPaq.EliminarProducto;
 import PantallasCUIProductosPaq.PantallaMenu;
+import PantallasCUIProductosPaq.RegistroPaquete;
 import PantallasCUIProductosPaq.RegistroProducto;
 import PantallasCUIProductosPaq.inicioAdmin;
 import java.awt.Color;
@@ -55,6 +59,14 @@ public class ControlCUIProductosPaquetes {
     public ProductoDTO actualizarProducto(ProductoActualizadoDTO productoActualizado) throws NegocioException{
         return cui.actualizarProducto(productoActualizado);
     }
+    
+    public ProductoDTO eliminarProducto(String id)throws NegocioException{
+        return cui.eliminarProducto(id);
+    }
+    
+    public PaqueteDTO registrarPaquete(NuevoPaqueteDTO paquete) throws NegocioException{
+        return cui.registrarPaquete(paquete);
+    }
 
       
     //Navegacion
@@ -77,6 +89,14 @@ public class ControlCUIProductosPaquetes {
     
     public void mostrarPantallaMenu(){
         mostrarPantallas(new PantallaMenu(this));
+    }
+    
+    public void mostrarPantallaEliminarProducto(){
+        mostrarPantallas(new EliminarProducto(this,null));
+    }
+    
+    public void mostrarPantallaRegistrarPaquete(){
+        mostrarPantallas(new RegistroPaquete(this));
     }
     
     

@@ -5,7 +5,9 @@
 package org.itson.gestionproductospaquetescui;
 
 import GoOrderDTO.CategoriaDTO;
+import GoOrderDTO.NuevoPaqueteDTO;
 import GoOrderDTO.NuevoProductoDTO;
+import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
@@ -26,5 +28,8 @@ public interface IGestionProductosPaquetesCUI  {
     
     public List<ProductoDTOCom> buscarProductosDinamico(String nombre, String idCategoria, Double precioMin, Double precioMax) throws NegocioException;
 
+    public abstract ProductoDTO eliminarProducto(String id) throws NegocioException;
+    
+    public PaqueteDTO registrarPaquete(NuevoPaqueteDTO nuevopaquete) throws NegocioException;
 }
  

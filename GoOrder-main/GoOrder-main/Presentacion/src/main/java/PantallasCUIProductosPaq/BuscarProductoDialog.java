@@ -23,6 +23,7 @@ public class BuscarProductoDialog extends JDialog {
     private JTextField txtPrecioMin;
     private JTextField txtPrecioMax;
     private JPanel panelResultados;
+    
 
     public BuscarProductoDialog(JFrame parent, ControlCUIProductosPaquetes control, IProductoSeleccionadoObserver observer) {
         super(parent, true); 
@@ -58,7 +59,6 @@ public class BuscarProductoDialog extends JDialog {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.setBackground(COLOR_FONDO_VERDE);
 
-        // -- Sub-Panel Superior (Filtros) --
         JPanel panelFiltros = new JPanel(null);
         panelFiltros.setBackground(COLOR_FONDO_VERDE);
         panelFiltros.setPreferredSize(new Dimension(370, 300));

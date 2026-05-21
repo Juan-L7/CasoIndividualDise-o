@@ -6,6 +6,7 @@ package utilerias;
 
 import Control.ControlCUIProductosPaquetes;
 import PantallasCUIProductosPaq.BuscarProductoDialog;
+import PantallasCUIProductosPaq.EliminarProducto;
 import PantallasCUIProductosPaq.RegistroProducto;
 
 import javax.swing.*;
@@ -39,7 +40,13 @@ public class MenuLateral extends JPanel {
 
         JButton btnEliminar = crearBotonMenu("Eliminar producto");
         btnEliminar.addActionListener(e -> {
-            System.out.println("Clic en Eliminar");
+            BuscarProductoDialog dialog = new BuscarProductoDialog(ventanaPadre, control, productoSeleccionado -> {
+                
+                 ventanaPadre.dispose();
+                 new EliminarProducto(control, productoSeleccionado).setVisible(true);
+                
+            });
+            dialog.setVisible(true);
         });
         add(btnEliminar);
         add(Box.createRigidArea(new Dimension(0, 20)));
@@ -62,7 +69,7 @@ public class MenuLateral extends JPanel {
 
         JButton btnPaquetes = crearBotonMenu("Paquetes");
         btnPaquetes.addActionListener(e -> {
-            System.out.println("Clic en Paquetes");
+            control.mostrarPantallaRegistrarPaquete();
         });
         add(btnPaquetes);
     }

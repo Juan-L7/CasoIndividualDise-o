@@ -5,6 +5,7 @@
 package Fachada;
 
 import Entidades.Categoria;
+import Entidades.Paquete;
 import Entidades.Producto;
 import goorderpersistencia.PersistenciaException;
 import java.util.List;
@@ -23,9 +24,13 @@ public interface IFachadaPersistencia {
     
     public abstract List<Producto> buscarProducto(String nombre) throws PersistenciaException;
     
+    public abstract Producto eliminarProducto(String id) throws PersistenciaException;
+    
     public abstract List<Producto> listarProductos() throws PersistenciaException;
     
     public abstract List<Categoria> listarCategorias() throws PersistenciaException;
     
     public abstract Categoria buscarCategoriaPorId(String idCategoria) throws PersistenciaException;
+    
+    public abstract Paquete registrarPaquete(Paquete paquete) throws PersistenciaException;
 }

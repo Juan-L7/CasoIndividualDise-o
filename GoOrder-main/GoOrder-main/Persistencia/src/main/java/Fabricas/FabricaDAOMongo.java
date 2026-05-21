@@ -6,8 +6,10 @@ package Fabricas;
 
 import Interfaces.ICatalogoCategoriasDAO;
 import Interfaces.ICatalogoProductosDAO;
+import Interfaces.IPaquetesDAO;
 import Interfaces.IProductosDAO;
 import goorderpersistencia.CatalogoCategoriasDAO;
+import goorderpersistencia.PaquetesDAO;
 import goorderpersistencia.PersistenciaException;
 import goorderpersistencia.ProductoDAO;
 
@@ -30,6 +32,11 @@ public class FabricaDAOMongo implements IFabricaDAO{
     @Override
     public ICatalogoCategoriasDAO crearCatalogoCategoriasDAO() throws PersistenciaException {
         return new CatalogoCategoriasDAO();
+    }
+
+    @Override
+    public IPaquetesDAO crearPaquetesDAO() throws PersistenciaException {
+        return new PaquetesDAO();
     }
     
 }
