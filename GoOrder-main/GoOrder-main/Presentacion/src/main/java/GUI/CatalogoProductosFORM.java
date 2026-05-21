@@ -1,6 +1,7 @@
 package GUI;
 
 import Control.Control;
+import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoDTO;
 import Pattern.BotonRedondeado;
 import Pattern.FactoriaPaneles;
@@ -58,24 +59,32 @@ public class CatalogoProductosFORM extends javax.swing.JFrame {
      *
      * @param producto El nombre del producto que el usuario quiere buscar (puede estar vacío).
      */
-    private void cargarProductos(String producto) {
-        jPanel2.removeAll();
-        try {
-            if (producto == null || producto.trim().isEmpty()) {
-                for (ProductoDTO prod: control.listarProductos()) {
-                    agregarProducto(prod);
-                }
-            } else {
-                for (ProductoDTO prod: control.buscarProducto(producto)) {
-                    agregarProducto(prod);
-                }
+    private void cargarProductos(String filtro) {
+    jPanel2.removeAll();
+    try {
+        if (filtro == null || filtro.trim().isEmpty()) {
+            for (ProductoDTO prod : control.listarProductos()) {
+                agregarProducto(prod);
             }
-        } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar producto(s): " + e.getMessage());
+        } else {
+            for (ProductoDTO prod : control.buscarProducto(filtro)) {
+                agregarProducto(prod);
+            }
         }
-        jPanel2.revalidate();
-        jPanel2.repaint();
+
+        if (filtro == null || filtro.trim().isEmpty()) {
+            for (PaqueteDTO paq : control.listarPaquetes()) {
+                agregarPaquete(paq);
+            }
+        }
+
+    } catch (NegocioException e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar los elementos del catálogo: " + e.getMessage());
     }
+    
+    jPanel2.revalidate();
+    jPanel2.repaint();
+}
 
     /**
      * Toma la información de un solo producto y utiliza una "Fábrica" (FactoriaPaneles)
@@ -88,6 +97,10 @@ public class CatalogoProductosFORM extends javax.swing.JFrame {
         IPaneles panelProducto = FactoriaPaneles.crearPanelProducto(control, producto);
         jPanel2.add(panelProducto.getPanel());
     }
+    private void agregarPaquete(PaqueteDTO paquete) {
+    IPaneles panelPaquete = FactoriaPaneles.crearPanelPaquete(control, paquete);
+    jPanel2.add(panelPaquete.getPanel());
+}
 
     /**
      * Borra el texto que el usuario haya escrito en la barra de búsqueda.

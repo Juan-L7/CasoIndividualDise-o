@@ -13,18 +13,22 @@ import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
+import GoOrderDTO.VentaDTO;
 import PantallasCUIProductosPaq.BuscarProductoDialog;
 import PantallasCUIProductosPaq.EliminarProducto;
 import PantallasCUIProductosPaq.PantallaMenu;
+import PantallasCUIProductosPaq.PantallaPaquetes;
 import PantallasCUIProductosPaq.RegistroPaquete;
 import PantallasCUIProductosPaq.RegistroProducto;
 import PantallasCUIProductosPaq.inicioAdmin;
 import java.awt.Color;
+import java.time.LocalDate;
 import java.util.List;
 import javax.swing.JFrame;
 import org.example.NegocioException;
 import org.itson.gestionproductospaquetescui.GestionProductosPaquetesCUI;
 import org.itson.gestionproductospaquetescui.IGestionProductosPaquetesCUI;
+import org.itson.infraestructura.GeneradorReportesPDF;
 
 /**
  *
@@ -67,9 +71,32 @@ public class ControlCUIProductosPaquetes {
     public PaqueteDTO registrarPaquete(NuevoPaqueteDTO paquete) throws NegocioException{
         return cui.registrarPaquete(paquete);
     }
+    
+    public List<PaqueteDTO> listarPaquetes() throws NegocioException{
+        return cui.listarPaquetes();
+    }
+    
+    public List<PaqueteDTO> buscarPaquetesDinamico(String nombre, Double precioMax) throws NegocioException{
+        return cui.buscarPaquetesDinamico(nombre, precioMax);
+    }
+    
+    public PaqueteDTO actualizarPaquete(PaqueteDTO paqueteActualizado) throws NegocioException {
+        return cui.actualizarPaquete(paqueteActualizado);
+    }
+    
+    public PaqueteDTO eliminarPaquete(String id) throws NegocioException{
+        return cui.eliminarPaquete(id);
+    }
+    
+    public List<VentaDTO> obtenerVentasPorRango(LocalDate inicio,LocalDate fin) throws NegocioException{
+        return cui.obtenerVentasPorRango(inicio, fin);
+    } 
+    
+    public void generarReportePDF() throws NegocioException{
+            cui.generarReportePDF();
+    }
 
-      
-    //Navegacion
+    
     private JFrame ventanaActual = null;
     
     private void mostrarPantallas(JFrame nuevaVentana){
@@ -98,6 +125,11 @@ public class ControlCUIProductosPaquetes {
     public void mostrarPantallaRegistrarPaquete(){
         mostrarPantallas(new RegistroPaquete(this));
     }
+    
+    public void mostrarPantallaPaquetes(){
+        mostrarPantallas(new PantallaPaquetes(this));
+    }
+    
     
     
     

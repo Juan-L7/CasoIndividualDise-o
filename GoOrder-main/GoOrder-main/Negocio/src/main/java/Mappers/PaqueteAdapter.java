@@ -9,8 +9,10 @@ import Entidades.ImagenSerializada;
 import Entidades.Paquete;
 import GoOrderDTO.ItemPaqueteDTO;
 import GoOrderDTO.NuevoPaqueteDTO;
+import GoOrderDTO.PaqueteDTO;
 import java.util.ArrayList;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -52,6 +54,43 @@ public class PaqueteAdapter {
         );
     }
     
-    
+    public static Paquete convertirDTOAEntidad(PaqueteDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        ImagenSerializada imagenEntidad = null;
+        if (dto.getImagen() != null) {
+            imagenEntidad = new ImagenSerializada(
+                    dto.getImagen().getImagen(),
+                    dto.getImagen().getFormato()
+            );
+        }
+
+        List<DetallePaquete> listaDetalles = new ArrayList<>();
+        if (dto.getListaProductos() != null) {
+            for (ItemPaqueteDTO itemDTO : dto.getListaProductos()) {
+                DetallePaquete detalle = new DetallePaquete(
+                        itemDTO.getIdProducto(), 
+                        itemDTO.getCantidad()
+                );
+                listaDetalles.add(detalle);
+            }
+        }
+
+
+        return new Paquete(
+                dto.getIdPaquete(), 
+                imagenEntidad,
+                dto.getNombre(),
+                dto.getPrecio(),
+                dto.getFechaInicioVigencia(), 
+                dto.getFechaFinVigencia(),   
+                listaDetalles
+        );
+    }
 }
+    
+    
+
 

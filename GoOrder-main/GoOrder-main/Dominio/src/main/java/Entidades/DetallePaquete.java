@@ -16,6 +16,9 @@ public class DetallePaquete {
     private String idProducto;
     private Integer cantidad;
 
+    public DetallePaquete() {
+    }
+    
     public DetallePaquete(String idProducto, Integer cantidad) {
         this.idProducto = idProducto;
         this.cantidad = cantidad;

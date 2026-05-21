@@ -69,7 +69,7 @@ public class MenuLateral extends JPanel {
 
         JButton btnPaquetes = crearBotonMenu("Paquetes");
         btnPaquetes.addActionListener(e -> {
-            control.mostrarPantallaRegistrarPaquete();
+            control.mostrarPantallaPaquetes();
         });
         add(btnPaquetes);
     }

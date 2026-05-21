@@ -2,6 +2,7 @@
 package Pattern;
 
 import Control.Control;
+import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoSeleccionadoDTO;
 
@@ -26,5 +27,9 @@ public class FactoriaPaneles {
      */
     public static IPaneles crearPanelProducto(Control control, ProductoDTO productoDescripcion) {
         return new ImplementacionPanel(control, productoDescripcion);
+    }
+    
+    public static IPaneles crearPanelPaquete(Control control, PaqueteDTO paquete) {
+        return new ImplementacionPanelPaquete(control, paquete);
     }
 }

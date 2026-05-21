@@ -11,6 +11,8 @@ import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoActualizadoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoDTOCom;
+import GoOrderDTO.VentaDTO;
+import java.time.LocalDate;
 import java.util.List;
 import org.example.NegocioException;
 
@@ -31,5 +33,18 @@ public interface IGestionProductosPaquetesCUI  {
     public abstract ProductoDTO eliminarProducto(String id) throws NegocioException;
     
     public PaqueteDTO registrarPaquete(NuevoPaqueteDTO nuevopaquete) throws NegocioException;
+    
+    public List<PaqueteDTO> listarPaquetes() throws NegocioException;
+    
+    public List<PaqueteDTO> buscarPaquetesDinamico(String nombre, Double precioMax) throws NegocioException;
+    
+    public PaqueteDTO actualizarPaquete(PaqueteDTO paqueteActualizado) throws NegocioException;
+    
+    public PaqueteDTO eliminarPaquete(String id) throws NegocioException;
+    
+    public List<VentaDTO> obtenerVentasPorRango(LocalDate inicio,LocalDate fin) throws NegocioException;
+    
+    public void generarReportePDF() throws NegocioException ;
+    
 }
  

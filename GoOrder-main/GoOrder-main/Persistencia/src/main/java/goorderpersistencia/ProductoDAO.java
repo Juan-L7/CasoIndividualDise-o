@@ -28,7 +28,6 @@ import org.bson.types.ObjectId;
 public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
     
     private static final String NOMBRE_COLECCION = "Productos";
-//    private List<Producto> productos;
 
     public ProductoDAO() {
     
@@ -189,6 +188,22 @@ public class ProductoDAO implements ICatalogoProductosDAO,IProductosDAO {
             return productoEliminado; 
         } catch (Exception e) {
             throw new PersistenciaException("Error al intentar eliminar el producto en la base de datos", e);
+        }
+    }
+    
+    @Override
+    public Producto buscarProductoPorId(String idProducto) throws PersistenciaException {
+        try (MongoClient cliente = ManejadorConexiones.crearConexion()) {
+            MongoDatabase baseDatos = this.obtenerBaseDatos(cliente);
+            MongoCollection<Producto> coleccion = this.obtenerColecciones(baseDatos);    
+
+            ObjectId idPro = new ObjectId(idProducto);
+            Bson filtro = Filters.eq("_id", idPro);
+
+            return coleccion.find(filtro).first();
+
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar el producto por ID", e);
         }
     }
 }

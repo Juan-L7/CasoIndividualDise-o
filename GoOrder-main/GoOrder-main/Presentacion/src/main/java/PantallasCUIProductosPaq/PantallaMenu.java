@@ -44,7 +44,6 @@ public class PantallaMenu extends JFrame {
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         panelPrincipal.add(lblTitulo);
 
-        // Agregamos el panel verde al centro
         add(panelPrincipal, BorderLayout.CENTER);
     }
 }

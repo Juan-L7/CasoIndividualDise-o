@@ -33,4 +33,14 @@ public interface IFachadaPersistencia {
     public abstract Categoria buscarCategoriaPorId(String idCategoria) throws PersistenciaException;
     
     public abstract Paquete registrarPaquete(Paquete paquete) throws PersistenciaException;
+    
+    public abstract List<Paquete> listarPaquetes() throws PersistenciaException;
+    
+    public Producto buscarProductoPorId(String idProducto) throws PersistenciaException;
+    
+    public List<Paquete> buscarPaquetesDinamico(String nombre, Double precioMax) throws PersistenciaException;
+    
+    public Paquete actualizarPaquete(Paquete paqueteActualizado) throws PersistenciaException;
+    
+    public Paquete eliminarPaquete(String id) throws PersistenciaException;
 }

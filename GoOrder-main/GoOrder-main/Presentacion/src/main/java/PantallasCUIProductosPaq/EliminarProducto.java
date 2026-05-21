@@ -6,6 +6,7 @@ package PantallasCUIProductosPaq;
 import Control.ControlCUIProductosPaquetes;
 import GoOrderDTO.ProductoDTOCom;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
 import java.util.Base64;
@@ -31,7 +32,7 @@ public class EliminarProducto extends JFrame {
     private final Color COLOR_FONDO_VERDE = new Color(85, 239, 153); 
     private final Color COLOR_BOTON_NEGRO = Color.BLACK;
     private final Color COLOR_TEXTO_BLANCO = Color.WHITE;
-    private final Color COLOR_SOLO_LECTURA = new Color(220, 220, 220); // Gris claro del boceto
+    private final Color COLOR_SOLO_LECTURA = new Color(220, 220, 220); 
 
     private JTextField txtNombre;
     private JTextField txtPrecio;
@@ -57,7 +58,6 @@ public class EliminarProducto extends JFrame {
         getContentPane().setBackground(COLOR_FONDO_VERDE);
         setLayout(null); 
         
-        // --- MENÚ LATERAL ---
         MenuLateral panelMenu = new MenuLateral(this, control);
         panelMenu.setBounds(0, 0, 110, 650); 
         add(panelMenu); 
@@ -75,6 +75,7 @@ public class EliminarProducto extends JFrame {
         lblNombre.setFont(fuenteEtiquetas);
         lblNombre.setBounds(120, 90, 80, 25);
         add(lblNombre);
+        
 
         txtNombre = new JTextField();
         txtNombre.setFont(fuenteCampos);
@@ -170,7 +171,6 @@ public class EliminarProducto extends JFrame {
         txtPrecio.setText(String.valueOf(productoAEliminar.getPrecio()));
         txtDescripcion.setText(productoAEliminar.getDescripcion());
         
-        // Asumiendo que guardaste el string de la categoria en el DTO, si es un objeto extrae el nombre
         txtCategoria.setText(productoAEliminar.getIdcategoria() != null ? productoAEliminar.getIdcategoria() : "Sin Categoría");
         
         if (productoAEliminar.getDisponibilidad() == Enums.Disponibilidad.DISPONIBLE) {
@@ -198,7 +198,6 @@ public class EliminarProducto extends JFrame {
     }
 
     private void ejecutarEliminacion() {
-        // Doble validación, siempre es buena práctica al borrar datos físicos
         int confirmacion = JOptionPane.showConfirmDialog(
                 this, 
                 "¿Estás completamente seguro de que deseas eliminar '" + productoAEliminar.getNombre() + "'?\nEsta acción no se puede deshacer.", 
@@ -209,12 +208,10 @@ public class EliminarProducto extends JFrame {
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
-                // Aquí llamamos al método que conecta con el DAO
                 control.eliminarProducto(productoAEliminar.getId()); 
                 
                 JOptionPane.showMessageDialog(this, "Producto eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose(); // Cierra la pantalla
-                // Opcional: control.mostrarPantallaMenu(); si deseas regresar al menú directamente
+                this.dispose(); 
                 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

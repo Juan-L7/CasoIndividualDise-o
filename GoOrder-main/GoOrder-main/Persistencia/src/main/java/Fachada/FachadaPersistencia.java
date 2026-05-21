@@ -82,5 +82,38 @@ public class FachadaPersistencia implements IFachadaPersistencia{
         IPaquetesDAO paquetesDAO = fabrica.crearPaquetesDAO();
         return paquetesDAO.registrarPaquete(paquete);
     }
+
+    @Override
+    public List<Paquete> listarPaquetes() throws PersistenciaException {
+        IPaquetesDAO paquetesDAO = fabrica.crearPaquetesDAO();
+        return paquetesDAO.listarPaquetes();    
+    }
+
+    @Override
+    public Producto buscarProductoPorId(String idProducto) throws PersistenciaException {
+        IProductosDAO productoDAO = fabrica.crearProductosDAO();
+        return productoDAO.buscarProductoPorId(idProducto);
+        
+    }
+
+    @Override
+    public List<Paquete> buscarPaquetesDinamico(String nombre, Double precioMax) throws PersistenciaException {
+        IPaquetesDAO paquetesDAO = fabrica.crearPaquetesDAO();
+        return paquetesDAO.buscarPaquetesDinamico(nombre, precioMax);
+    }
+
+    @Override
+    public Paquete actualizarPaquete(Paquete paqueteActualizado) throws PersistenciaException {
+        IPaquetesDAO paquetesDAO = fabrica.crearPaquetesDAO();
+        return paquetesDAO.actualizarPaquete(paqueteActualizado);
+    }
+
+    @Override
+    public Paquete eliminarPaquete(String id) throws PersistenciaException {
+        IPaquetesDAO paquetesDAO = fabrica.crearPaquetesDAO();
+        return paquetesDAO.eliminarPaquete(id);
+    }
+    
+    
     
 }

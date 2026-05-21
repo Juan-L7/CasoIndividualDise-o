@@ -95,11 +95,7 @@ public class PagoEfectivo extends JFrame {
 
         btnAceptar.addActionListener(e -> {
             control.mostrarAgradecimiento();
-            try {
-                control.limpiarCarrito();
-            } catch (NegocioException ex) {
-                Logger.getLogger(PagoEfectivo.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
         });
 
         footerPanel.add(btnAceptar);

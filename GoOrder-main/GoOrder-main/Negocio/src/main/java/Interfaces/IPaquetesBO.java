@@ -6,6 +6,7 @@ package Interfaces;
 
 import GoOrderDTO.NuevoPaqueteDTO;
 import GoOrderDTO.PaqueteDTO;
+import java.util.List;
 import org.example.NegocioException;
 
 /**
@@ -15,4 +16,12 @@ import org.example.NegocioException;
 public interface IPaquetesBO {
     
     public abstract PaqueteDTO registrarPaquete(NuevoPaqueteDTO paquete) throws NegocioException;
+    
+    public abstract List<PaqueteDTO> listarPaquetes() throws NegocioException;
+    
+    public List<PaqueteDTO> buscarPaquetesDinamico(String nombre, Double precioMax) throws NegocioException;
+    
+    public PaqueteDTO actualizarPaquete(PaqueteDTO paqueteActualizado) throws NegocioException;
+    
+    public PaqueteDTO eliminarPaquete(String id) throws NegocioException;
 }

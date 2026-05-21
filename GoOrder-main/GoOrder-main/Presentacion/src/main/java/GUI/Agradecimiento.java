@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import org.example.NegocioException;
 
 public class Agradecimiento extends JFrame {
 
@@ -82,7 +83,13 @@ public class Agradecimiento extends JFrame {
 
         btnInicio.addActionListener(e -> {
             if (control != null) {
-
+                try {
+                    control.registrarVenta(control.getCarrito());
+                    control.limpiarCarrito();
+                } catch (NegocioException ex) {
+                    System.getLogger(Agradecimiento.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                
                 control.mostrarInicio();
                 
                 

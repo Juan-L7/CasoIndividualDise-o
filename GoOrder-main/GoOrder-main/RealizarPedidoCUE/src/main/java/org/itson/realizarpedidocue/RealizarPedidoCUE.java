@@ -6,17 +6,21 @@ import GoOrderDTO.CodigoDescuentoDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoSeleccionadoDTO;
 import GoOrderDTO.SucursalDTO;
+import GoOrderDTO.VentaDTO;
 import Interfaces.ICarritoBO;
 import Interfaces.IDescuentosBO;
 import Interfaces.IProductoBO;
 import Interfaces.IServicioBanco;
 import Interfaces.ISucursalesDAO;
+import Interfaces.IVentaBO;
 import Mappers.SucursalMapper;
 import goorderpersistencia.PersistenciaException;
 import goorderpersistencia.SucursalesDAO;
+import java.time.LocalDate;
 import java.util.List;
 import org.example.CarritoBO;
 import org.example.NegocioException;
+import org.example.VentaBO;
 
 /**
  *
@@ -29,12 +33,14 @@ public class RealizarPedidoCUE implements IRealizarPedidoCUE {
    private ICarritoBO carritoBO;
    private IDescuentosBO descuentosBO;
    private IServicioBanco bancoService;
+   private IVentaBO ventasBO;
     
    public RealizarPedidoCUE(IProductoBO productoBO,ICarritoBO carritoBO,IServicioBanco bancoService){
        this.productoBO = productoBO;
        sucursalesDAO = new SucursalesDAO();
        this.carritoBO = carritoBO;
        this.bancoService = bancoService;
+       this.ventasBO = new VentaBO();
    }
    
     @Override
@@ -148,5 +154,12 @@ public class RealizarPedidoCUE implements IRealizarPedidoCUE {
         
         return pagoExitoso; 
     }
+
+    @Override
+    public void registrarVenta(CarritoDTO carrito) throws NegocioException {
+            ventasBO.registrarVenta(carrito);
+        }
+
+    
     
 }

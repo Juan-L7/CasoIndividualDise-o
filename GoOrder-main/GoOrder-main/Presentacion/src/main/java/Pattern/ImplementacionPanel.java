@@ -44,11 +44,9 @@ public class ImplementacionPanel extends javax.swing.JPanel implements IPaneles 
         lbNombre.setText(productoDescripcion.getNombre());
         lbPrecio.setText("$"+productoDescripcion.getPrecio());
         
-        // --- CONFIGURACIÓN DE LA IMAGEN (OPCIÓN 2) ---
         lbImagen.setForeground(Color.WHITE); 
         lbImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        // Como aplicaremos la Opción 2, el DTO normal ya traerá el String Base64
         String textoBase64 = productoDescripcion.getImagen();
         
         if (textoBase64 != null && !textoBase64.trim().isEmpty()) {

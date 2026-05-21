@@ -78,7 +78,6 @@ public class inicioAdmin extends JFrame{
             if (this.control != null) {
 
                 try {
-//                    this.control.mostrarRegistroProducto();
                       this.control.mostrarPantallaMenu();
                 } catch (Exception ex) {
                     System.getLogger(inicioAdmin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

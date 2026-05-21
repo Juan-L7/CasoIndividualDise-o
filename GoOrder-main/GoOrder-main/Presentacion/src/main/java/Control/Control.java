@@ -3,6 +3,7 @@ package Control;
 
 import GUI.*;
 import GoOrderDTO.CarritoDTO;
+import GoOrderDTO.PaqueteDTO;
 import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoSeleccionadoDTO;
 import GoOrderDTO.SucursalDTO;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import org.example.NegocioException;
+import org.itson.gestionproductospaquetescui.GestionProductosPaquetesCUI;
+import org.itson.gestionproductospaquetescui.IGestionProductosPaquetesCUI;
 import org.itson.realizarpedidocue.IRealizarPedidoCUE;
 
 public class Control {
@@ -24,10 +27,12 @@ public class Control {
     public final Color COLOR_BORDE = new Color(60, 60, 60);
     private final String rutaImagenes = "Resources/";
     private IRealizarPedidoCUE realizarPedido;
+    private IGestionProductosPaquetesCUI cui;
     List<ProductoDTO> listaProductos = new ArrayList<>();
 
     public Control(IRealizarPedidoCUE realizarPedido) {
         this.realizarPedido = realizarPedido;
+        this.cui =  new GestionProductosPaquetesCUI();
         cargarMenuProductos();
     }
 
@@ -82,6 +87,14 @@ public class Control {
     public void limpiarCarrito() throws NegocioException {
         realizarPedido.LimpiarCarrito();
     }
+    
+    public List<PaqueteDTO> listarPaquetes() throws NegocioException{
+        return cui.listarPaquetes();
+    }
+    
+     public void registrarVenta(CarritoDTO carrito) throws NegocioException{
+         realizarPedido.registrarVenta(carrito);
+     }
 
     //NAVEGACION DEL SISTEMA
     private JFrame ventanaActual = null;

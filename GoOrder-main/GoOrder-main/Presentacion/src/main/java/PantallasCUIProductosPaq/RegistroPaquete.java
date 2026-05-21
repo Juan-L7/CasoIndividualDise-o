@@ -1,14 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package PantallasCUIProductosPaq;
+
 import Control.ControlCUIProductosPaquetes;
 import GoOrderDTO.ImagenDTO;
 import GoOrderDTO.ItemPaqueteDTO;
 import GoOrderDTO.NuevoPaqueteDTO;
+import GoOrderDTO.PaqueteDTO; 
 import GoOrderDTO.ProductoDTOCom;
 import Observer.IProductoSeleccionadoObserver;
+import PantallasCUIProductosPaq.BuscarProductoDialog;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,7 +39,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import utilerias.MenuLateral;
 
 /**
- * Pantalla para el registro de nuevos paquetes.
+ * Pantalla para el registro y actualización de paquetes.
  * Implementa IProductoObserver para escuchar al buscador de productos.
  */
 public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObserver {
@@ -48,12 +47,10 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
     private ControlCUIProductosPaquetes control;
     private JFrame ventanaPadre;
     
-    // Paleta de colores homologada
     private final Color COLOR_FONDO_VERDE = new Color(85, 239, 153); 
     private final Color COLOR_BOTON_NEGRO = Color.BLACK;
     private final Color COLOR_TEXTO_BLANCO = Color.WHITE;
 
-    // Componentes de interfaz
     private JTextField txtNombre;
     private JTextField txtPrecio;
     private JTextField txtFechaInicio;
@@ -62,42 +59,51 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
     private JPanel panelProductosContenedor;
     private JButton btnRegistrar;
 
-    // Variables de estado
     private final List<ItemPaqueteDTO> listaProductosSeleccionados;
     private String base64ImagenActual = null;
     private String formatoImagenActual = null;
+    
+    private PaqueteDTO paqueteEdicion = null;
 
     public RegistroPaquete(ControlCUIProductosPaquetes control) {
         this.control = control;
         this.listaProductosSeleccionados = new ArrayList<>();
+        this.paqueteEdicion = null; 
         inicializarComponentes();
     }
 
+    public RegistroPaquete(ControlCUIProductosPaquetes control, PaqueteDTO paqueteAEditar) {
+        this.control = control;
+        this.listaProductosSeleccionados = new ArrayList<>();
+        this.paqueteEdicion = paqueteAEditar; 
+        inicializarComponentes();
+        cargarDatosEdicion(); 
+    }
+
     private void inicializarComponentes() {
-        setTitle("GoOrder - Registrar Paquete");
+        String textoTitulo = (paqueteEdicion == null) ? "Nuevo Paquete" : "Actualizar Paquete";
+        String textoBoton = (paqueteEdicion == null) ? "Registrar" : "Actualizar";
+
+        setTitle("GoOrder - " + textoTitulo);
         setSize(400, 650); 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setLocationRelativeTo(null);
         getContentPane().setBackground(COLOR_FONDO_VERDE);
         setLayout(null); 
         
-        // 1. Menú Lateral
         MenuLateral panelMenu = new MenuLateral(this, control);
         panelMenu.setBounds(0, 0, 110, 650); 
         add(panelMenu); 
 
-        // Fuentes
         Font fuenteTitulos = new Font("Arial", Font.BOLD, 24);
         Font fuenteEtiquetas = new Font("Arial", Font.BOLD, 14);
         Font fuenteCampos = new Font("Arial", Font.PLAIN, 12);
 
-        // Título
-        JLabel lblTitulo = new JLabel("Nuevo Paquete");
+        JLabel lblTitulo = new JLabel(textoTitulo);
         lblTitulo.setFont(fuenteTitulos);
-        lblTitulo.setBounds(130, 20, 200, 40);
+        lblTitulo.setBounds(130, 20, 250, 40);
         add(lblTitulo);
         
-        // Nombre
         JLabel lblNombre = new JLabel("Nombre:");
         lblNombre.setFont(fuenteEtiquetas);
         lblNombre.setBounds(120, 70, 70, 25);
@@ -109,7 +115,6 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         txtNombre.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
         add(txtNombre);
 
-        // Precio
         JLabel lblPrecio = new JLabel("Precio:");
         lblPrecio.setFont(fuenteEtiquetas);
         lblPrecio.setBounds(120, 110, 70, 25);
@@ -121,7 +126,6 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         txtPrecio.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
         add(txtPrecio);
 
-        // Productos
         JLabel lblProductos = new JLabel("Productos:");
         lblProductos.setFont(fuenteEtiquetas);
         lblProductos.setBounds(120, 150, 90, 25);
@@ -137,7 +141,6 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         btnBuscarProducto.addActionListener(e -> abrirBuscadorProductos());
         add(btnBuscarProducto);
 
-        // Contenedor de la lista de productos
         panelProductosContenedor = new JPanel();
         panelProductosContenedor.setLayout(new BoxLayout(panelProductosContenedor, BoxLayout.Y_AXIS));
         panelProductosContenedor.setBackground(COLOR_FONDO_VERDE);
@@ -147,7 +150,6 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         scrollProductos.setBorder(BorderFactory.createEmptyBorder());
         add(scrollProductos);
 
-        // Vigencia
         JLabel lblVigencia = new JLabel("Vigencia:");
         lblVigencia.setFont(fuenteEtiquetas);
         lblVigencia.setBounds(120, 300, 100, 25);
@@ -170,7 +172,6 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         txtFechaFin.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
         add(txtFechaFin);
 
-        // Imagen
         JLabel lblImagen = new JLabel("Imagen:");
         lblImagen.setFont(fuenteEtiquetas);
         lblImagen.setBounds(120, 370, 70, 25);
@@ -193,22 +194,54 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         lblImagenPreview.setHorizontalAlignment(JLabel.CENTER);
         add(lblImagenPreview);
 
-        // Botón Registrar
-        btnRegistrar = new JButton("Registrar");
+        btnRegistrar = new JButton(textoBoton);
         btnRegistrar.setBackground(COLOR_BOTON_NEGRO);
         btnRegistrar.setForeground(COLOR_TEXTO_BLANCO);
         btnRegistrar.setFont(new Font("Arial", Font.BOLD, 14));
         btnRegistrar.setBounds(185, 520, 100, 35);
         btnRegistrar.setFocusPainted(false);
         btnRegistrar.setBorder(BorderFactory.createEmptyBorder());
-        btnRegistrar.addActionListener(e -> ejecutarRegistro());
+        btnRegistrar.addActionListener(e -> ejecutarGuardado()); 
         add(btnRegistrar);
+    }
+
+    private void cargarDatosEdicion() {
+        if (paqueteEdicion == null) return;
+
+        txtNombre.setText(paqueteEdicion.getNombre());
+        txtPrecio.setText(String.valueOf(paqueteEdicion.getPrecio()));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        if (paqueteEdicion.getFechaInicioVigencia() != null) {
+            txtFechaInicio.setText(paqueteEdicion.getFechaInicioVigencia().format(formatter));
+        }
+        if (paqueteEdicion.getFechaFinVigencia() != null) {
+            txtFechaFin.setText(paqueteEdicion.getFechaFinVigencia().format(formatter));
+        }
+
+        if (paqueteEdicion.getImagen() != null && paqueteEdicion.getImagen().getImagen() != null) {
+            try {
+                base64ImagenActual = paqueteEdicion.getImagen().getImagen();
+                formatoImagenActual = paqueteEdicion.getImagen().getFormato();
+                
+                byte[] bytesImagen = Base64.getDecoder().decode(base64ImagenActual);
+                ImageIcon iconoOriginal = new ImageIcon(bytesImagen);
+                Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+                lblImagenPreview.setIcon(new ImageIcon(imagenEscalada));
+            } catch (Exception e) {
+                System.out.println("Error decodificando imagen existente: " + e.getMessage());
+            }
+        }
+
+        if (paqueteEdicion.getListaProductos() != null) {
+            this.listaProductosSeleccionados.addAll(paqueteEdicion.getListaProductos());
+            actualizarListaVisualProductos();
+        }
     }
 
     private void abrirBuscadorProductos() {
         BuscarProductoDialog dialog = new BuscarProductoDialog(this, control, this);
         dialog.setVisible(true);
-    
     }
 
     @Override
@@ -239,28 +272,25 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         for (ItemPaqueteDTO item : listaProductosSeleccionados) {
             JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
             fila.setBackground(Color.WHITE);
-            // Ajustamos el tamaño para que no se apachurre
             fila.setPreferredSize(new Dimension(230, 35)); 
             fila.setMaximumSize(new Dimension(230, 35));
             fila.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
             JLabel lblNombreProd = new JLabel(item.getNombre());
-            lblNombreProd.setPreferredSize(new Dimension(100, 20)); // Espacio para el nombre
+            lblNombreProd.setPreferredSize(new Dimension(100, 20)); 
             lblNombreProd.setFont(new Font("Arial", Font.PLAIN, 12));
 
-            // Botón Eliminar (Bote de basura)
             JButton btnEliminar = new JButton("🗑");
-            btnEliminar.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14)); // Fuente compatible con emojis
+            btnEliminar.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14)); 
             btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             btnEliminar.setMargin(new Insets(0, 0, 0, 0));
-            btnEliminar.setContentAreaFilled(false); // Quita el fondo del botón
-            btnEliminar.setBorderPainted(false); // Quita el borde
+            btnEliminar.setContentAreaFilled(false); 
+            btnEliminar.setBorderPainted(false); 
             btnEliminar.addActionListener(e -> {
                 listaProductosSeleccionados.remove(item);
                 actualizarListaVisualProductos();
             });
 
-            // Botón Menos (Rojo)
             JButton btnMenos = new JButton("━");
             btnMenos.setForeground(Color.RED);
             btnMenos.setFont(new Font("Arial", Font.BOLD, 14));
@@ -277,14 +307,12 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
                 actualizarListaVisualProductos();
             });
 
-            // Etiqueta de Cantidad
             JLabel lblCantidad = new JLabel(String.valueOf(item.getCantidad()), SwingConstants.CENTER);
             lblCantidad.setPreferredSize(new Dimension(20, 20));
             lblCantidad.setFont(new Font("Arial", Font.BOLD, 12));
 
-            // Botón Más (Verde)
             JButton btnMas = new JButton("✚");
-            btnMas.setForeground(new Color(0, 180, 0)); // Verde oscuro
+            btnMas.setForeground(new Color(0, 180, 0)); 
             btnMas.setFont(new Font("Arial", Font.BOLD, 12));
             btnMas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             btnMas.setMargin(new Insets(0, 0, 0, 0));
@@ -295,7 +323,6 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
                 actualizarListaVisualProductos();
             });
 
-            // Agregamos todo a la fila en orden
             fila.add(lblNombreProd);
             fila.add(btnEliminar);
             fila.add(btnMenos);
@@ -303,7 +330,7 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
             fila.add(btnMas);
 
             panelProductosContenedor.add(fila);
-            panelProductosContenedor.add(Box.createRigidArea(new Dimension(0, 5))); // Separador entre filas
+            panelProductosContenedor.add(Box.createRigidArea(new Dimension(0, 5))); 
         }
         
         panelProductosContenedor.revalidate();
@@ -324,8 +351,8 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
                 formatoImagenActual = nombreArchivo.substring(nombreArchivo.lastIndexOf(".") + 1).toLowerCase();
 
                 ImageIcon iconoOriginal = new ImageIcon(bytesImagen);
-                Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(lblImagenPreview.getWidth(), lblImagenPreview.getHeight(), Image.SCALE_SMOOTH);
-                lblImagenPreview.setIcon(new ImageIcon(imagenEscalada));
+                Image imagenEscalade = iconoOriginal.getImage().getScaledInstance(lblImagenPreview.getWidth(), lblImagenPreview.getHeight(), Image.SCALE_SMOOTH);
+                lblImagenPreview.setIcon(new ImageIcon(imagenEscalade));
                 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error al cargar la imagen: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -333,7 +360,7 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
         }
     }
 
-    private void ejecutarRegistro() {
+    private void ejecutarGuardado() {
         try {
             if (txtNombre.getText().trim().isEmpty() || txtPrecio.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Llena los campos obligatorios.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -349,23 +376,41 @@ public class RegistroPaquete extends JFrame implements IProductoSeleccionadoObse
                 imagenDTO = new ImagenDTO(base64ImagenActual, formatoImagenActual);
             }
 
-            NuevoPaqueteDTO nuevoPaquete = new NuevoPaqueteDTO();
-            nuevoPaquete.setNombre(txtNombre.getText().trim());
-            nuevoPaquete.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
-            nuevoPaquete.setImagen(imagenDTO);
-            
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            nuevoPaquete.setFechaInicioVigencia(LocalDate.parse(txtFechaInicio.getText().trim(), formatter));
-            nuevoPaquete.setFechaFinVigencia(LocalDate.parse(txtFechaFin.getText().trim(), formatter));
-            nuevoPaquete.setListaProductos(listaProductosSeleccionados);
+            LocalDate fechaInicio = LocalDate.parse(txtFechaInicio.getText().trim(), formatter);
+            LocalDate fechaFin = LocalDate.parse(txtFechaFin.getText().trim(), formatter);
 
-            control.registrarPaquete(nuevoPaquete);
-            JOptionPane.showMessageDialog(this, "Paquete armado y listo para el controlador.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            if (paqueteEdicion == null) {
+                NuevoPaqueteDTO nuevoPaquete = new NuevoPaqueteDTO();
+                nuevoPaquete.setNombre(txtNombre.getText().trim());
+                nuevoPaquete.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
+                nuevoPaquete.setImagen(imagenDTO);
+                nuevoPaquete.setFechaInicioVigencia(fechaInicio);
+                nuevoPaquete.setFechaFinVigencia(fechaFin);
+                nuevoPaquete.setListaProductos(listaProductosSeleccionados);
+
+                control.registrarPaquete(nuevoPaquete);
+                JOptionPane.showMessageDialog(this, "Paquete registrado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                PaqueteDTO paqueteActualizar = new PaqueteDTO();
+                paqueteActualizar.setIdPaquete(paqueteEdicion.getIdPaquete()); 
+                paqueteActualizar.setNombre(txtNombre.getText().trim());
+                paqueteActualizar.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
+                paqueteActualizar.setImagen(imagenDTO);
+                paqueteActualizar.setFechaInicioVigencia(fechaInicio);
+                paqueteActualizar.setFechaFinVigencia(fechaFin);
+                paqueteActualizar.setListaProductos(listaProductosSeleccionados);
+
+                control.actualizarPaquete(paqueteActualizar); 
+                JOptionPane.showMessageDialog(this, "Paquete actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            control.mostrarPantallaPaquetes();
             
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "El precio debe ser un número válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error en el formato de fecha (usa dd/MM/yyyy) u otros datos.", "Error del Sistema", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error en los datos o en el guardado: " + ex.getMessage(), "Error del Sistema", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

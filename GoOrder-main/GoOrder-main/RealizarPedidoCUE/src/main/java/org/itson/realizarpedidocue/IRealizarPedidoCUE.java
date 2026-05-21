@@ -8,6 +8,8 @@ import GoOrderDTO.ProductoDTO;
 import GoOrderDTO.ProductoSeleccionadoDTO;
 import java.util.List;
 import GoOrderDTO.SucursalDTO;
+import GoOrderDTO.VentaDTO;
+import java.time.LocalDate;
 import org.example.NegocioException;
 
 /**
@@ -39,4 +41,8 @@ public interface IRealizarPedidoCUE {
     public CodigoDescuentoDTO cambiarEstadoDescuento(String codigo)throws NegocioException;
     
     public boolean finalizarCompra(String cuentaCliente, double totalAPagar) throws NegocioException;
+    
+    public void registrarVenta(CarritoDTO carrito) throws NegocioException;
+    
+    
 }

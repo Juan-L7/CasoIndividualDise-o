@@ -140,7 +140,7 @@ public class RegistroProducto extends JFrame {
         lblImagenPreview = new JLabel();
         lblImagenPreview.setOpaque(true);
         lblImagenPreview.setBackground(Color.WHITE);
-        lblImagenPreview.setBounds(190, 290, 90, 90); // Preview un poco más chica
+        lblImagenPreview.setBounds(190, 290, 90, 90); 
         lblImagenPreview.setHorizontalAlignment(JLabel.CENTER);
         add(lblImagenPreview);
 
